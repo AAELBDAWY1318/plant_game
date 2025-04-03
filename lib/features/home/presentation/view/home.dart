@@ -5,8 +5,19 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("Home"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Plant Scanner",
+          style: TextStyle(
+            color: Colors.green,
+            fontSize: 22.0,
+            fontWeight: FontWeight.w700,
+
+          ),
+        ),
+        centerTitle: true,
+      ),
     );
   }
 }

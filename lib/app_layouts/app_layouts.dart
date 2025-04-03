@@ -55,6 +55,7 @@ class _AppLayoutsState extends State<AppLayouts> {
       body: pages[selectedIndex].screen,
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
+        color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(
