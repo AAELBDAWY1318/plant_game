@@ -33,7 +33,6 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> {
     log("API URL: $url");
 
     try {
-      // إعداد FormData لـ PlantNet API
       FormData formData = FormData.fromMap({
         'images': await MultipartFile.fromFile(widget.imageFile.path,
             filename: 'plant_image.jpg'),
