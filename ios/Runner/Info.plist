@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>Need camera access to scan plants</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Need gallery access to pick plant images</string>
 </dict>
 </plist>
