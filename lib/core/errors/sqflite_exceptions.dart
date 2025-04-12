@@ -5,7 +5,6 @@ class DatabaseException implements Exception {
   DatabaseException(this.errorModel);
 }
 
-// Specific database exceptions
 class ConstraintViolationException extends DatabaseException {
   ConstraintViolationException(super.errorModel);
 }
@@ -30,19 +29,21 @@ class StorageFullException extends DatabaseException {
   StorageFullException(super.errorModel);
 }
 
+class ImageSaveException extends DatabaseException {
+  ImageSaveException(super.errorModel);
+}
+
 class UnknownDatabaseException extends DatabaseException {
   UnknownDatabaseException(super.errorModel);
 }
 
 void handleSQFLiteException(dynamic e) {
-  // Default error model for unknown cases
   SQFLiteErrorModel defaultErrorModel = SQFLiteErrorModel(
-    status: 600, // Base status code for database errors
+    status: 600,
     errorMessage: e.toString(),
   );
 
   if (e is! DatabaseException) {
-    // Handle non-DatabaseException (e.g., generic Dart errors)
     throw UnknownDatabaseException(
       SQFLiteErrorModel(
         status: 600,
@@ -51,7 +52,6 @@ void handleSQFLiteException(dynamic e) {
     );
   }
 
-  // Parse the DatabaseException message
   String errorMessage = e.toString().toLowerCase();
 
   if (errorMessage.contains('sqlite_constraint')) {
