@@ -17,6 +17,8 @@ dependencies:
   image_picker: ^1.1.2
   data_connection_checker_tv: ^0.3.5-nullsafety
   dartz: ^0.10.1
+  bloc: ^9.0.0
+  flutter_bloc: ^9.1.0
 
 dev_dependencies:
   flutter_test:
