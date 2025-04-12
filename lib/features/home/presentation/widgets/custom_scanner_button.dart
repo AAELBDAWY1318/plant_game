@@ -22,21 +22,82 @@ class _CustomScannerButtonState extends State<CustomScannerButton> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Choose Image Source"),
+        title: const Text(
+          "Choose Image Source",
+          style: TextStyle(
+            color: Colors.brown,
+            fontSize: 22.0,
+            fontWeight: FontWeight.w700,
+            shadows: [
+              BoxShadow(
+                color: Colors.white,
+                blurRadius: 10.0,
+                offset: Offset(0, 10),
+              )
+            ],
+          ),
+        ),
+        backgroundColor: Colors.greenAccent,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text("Camera"),
+              leading: const Icon(
+                Icons.camera_alt,
+                color: Colors.brown,
+                shadows: [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 10.0,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
+              title: const Text(
+                "Camera",
+                style: TextStyle(
+                  color: Colors.brown,
+                  fontWeight: FontWeight.w700,
+                  shadows: [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 10.0,
+                      offset: Offset(0, 10),
+                    )
+                  ],
+                ),
+              ),
               onTap: () {
                 _pickImage(ImageSource.camera);
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text("Gallery"),
+              leading: const Icon(
+                Icons.photo_library,
+                color: Colors.brown,
+                shadows: [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 10.0,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
+              title: const Text(
+                "Gallery",
+                style: TextStyle(
+                  color: Colors.brown,
+                  fontWeight: FontWeight.w700,
+                  shadows: [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurRadius: 10.0,
+                      offset: Offset(0, 10),
+                    )
+                  ],
+                ),
+              ),
               onTap: () {
                 _pickImage(ImageSource.gallery);
                 Navigator.pop(context);
@@ -47,7 +108,20 @@ class _CustomScannerButtonState extends State<CustomScannerButton> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(
+                color: Colors.brown,
+                fontWeight: FontWeight.w700,
+                shadows: [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 10.0,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -74,6 +148,7 @@ class _CustomScannerButtonState extends State<CustomScannerButton> {
       log("Error picking image: $e");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     sl<SizeConfig>().init(context);
