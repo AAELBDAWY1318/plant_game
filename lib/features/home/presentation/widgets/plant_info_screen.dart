@@ -1,81 +1,16 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:plant_game/core/database/api/end_points.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant_game/features/home/presentation/cubit/cubit.dart';
+import 'package:plant_game/features/home/presentation/cubit/state.dart';
+import 'package:plant_game/features/home/presentation/widgets/custom_error_message.dart';
+import 'package:plant_game/features/home/presentation/widgets/custom_typing_indicator.dart';
 import 'package:plant_game/features/home/presentation/widgets/image_info.dart';
 
-class PlantInfoScreen extends StatefulWidget {
+class PlantInfoScreen extends StatelessWidget {
   final File imageFile;
 
   const PlantInfoScreen({super.key, required this.imageFile});
-
-  @override
-  State<PlantInfoScreen> createState() => _PlantInfoScreenState();
-}
-
-class _PlantInfoScreenState extends State<PlantInfoScreen> {
-  String? plantName;
-  String? scientificName;
-  String? errorMessage;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchPlantInfo();
-  }
-
-  Future<void> _fetchPlantInfo() async {
-    final dio = Dio();
-    final url = EndPoints.baseUrl;
-
-    log("API URL: $url");
-
-    try {
-      FormData formData = FormData.fromMap({
-        'images': await MultipartFile.fromFile(widget.imageFile.path,
-            filename: 'plant_image.jpg'),
-        'organs':
-            'leaf', // افتراضياً بنحدد إنه ورقة، ممكن تغيره لـ flower أو bark حسب الصورة
-      });
-
-      Response response = await dio.post(
-        url,
-        data: formData,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        ),
-      );
-
-      var jsonData = response.data;
-      log("API Response: $jsonData");
-
-      setState(() {
-        // PlantNet بيرجع النتايج في حقل "results"
-        if (jsonData['results'] != null && jsonData['results'].isNotEmpty) {
-          plantName =
-              jsonData['results'][0]['species']['commonNames'].isNotEmpty
-                  ? jsonData['results'][0]['species']['commonNames'][0]
-                  : 'Unknown';
-          scientificName =
-              jsonData['results'][0]['species']['scientificNameWithoutAuthor'];
-        } else {
-          errorMessage = "No plant identified.";
-        }
-        isLoading = false;
-      });
-    } catch (e) {
-      log("API Error: $e");
-      setState(() {
-        errorMessage = "Failed to identify plant: $e";
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,11 +51,28 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(
-          child: ImageInfoShower(
-            imageFile: widget.imageFile,
-            plantName: plantName,
-            scientificName: scientificName,
+        child: BlocProvider(
+          create: (context) => ScanPlantCubit()..getPlantInfo(imageFile),
+          child: BlocBuilder<ScanPlantCubit, ScanPlatState>(
+            builder: (context, state) {
+              if (state is ScanImageSuccess) {
+                return Center(
+                  child: ImageInfoShower(
+                    imageFile: imageFile,
+                    plantName: state.plantModel.plantName,
+                    scientificName: state.plantModel.scientificName,
+                  ),
+                );
+              } else if (state is ScanImageFailure) {
+                return Center(
+                  child: CustomErrorMessage(errorMessage: state.errorMessage),
+                );
+              } else {
+                return const Center(
+                  child: TypingIndicator(),
+                );
+              }
+            },
           ),
         ),
       ),
