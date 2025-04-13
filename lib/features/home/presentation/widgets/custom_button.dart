@@ -1,41 +1,68 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant_game/core/utils/size_config.dart';
-
+import 'package:plant_game/features/home/presentation/cubit/cubit.dart';
 import '../../../../core/dj/service_locator.dart';
 
 class CustomSaveButton extends StatelessWidget {
-  const CustomSaveButton({super.key});
+  final String plantName;
+  final String scientificName;
+  final File? imageFile; // Made nullable to handle cases where no image is provided
+
+  const CustomSaveButton({
+    super.key,
+    required this.plantName,
+    required this.scientificName,
+    this.imageFile,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: sl<SizeConfig>().screenWidth! * 0.5,
-      height: sl<SizeConfig>().screenHeight! * 0.05,
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(20.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.brown,
-            blurRadius: 10.0,
-            offset: Offset(-10, 0),
-          ),
-          BoxShadow(
-            color: Colors.greenAccent,
-            blurRadius: 10.0,
-            offset: Offset(10, 0),
-          ),
-        ],
-
-      ),
-      child: const Center(
-        child: Text(
-          "Save Plant",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16.0,
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
+    return GestureDetector(
+      onTap: () {
+        if (plantName.isNotEmpty) {
+          // Only save if plantName is not empty
+          context.read<ScanPlantCubit>().addPlant(
+            plantName: plantName,
+            scientificName: scientificName.isNotEmpty ? scientificName : null,
+            imageFile: imageFile,
+          );
+        } else {
+          // Optionally show a snackbar or emit an error state
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Plant name is required')),
+          );
+        }
+      },
+      child: Container(
+        width: sl<SizeConfig>().screenWidth! * 0.5,
+        height: sl<SizeConfig>().screenHeight! * 0.05,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.brown,
+              blurRadius: 10.0,
+              offset: Offset(-10, 0),
+            ),
+            BoxShadow(
+              color: Colors.greenAccent,
+              blurRadius: 10.0,
+              offset: Offset(10, 0),
+            ),
+          ],
+        ),
+        child: const Center(
+          child: Text(
+            "Save Plant",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),

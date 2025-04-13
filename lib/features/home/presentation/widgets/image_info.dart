@@ -82,7 +82,11 @@ class ImageInfoShower extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const CustomSaveButton(),
+          CustomSaveButton(
+            plantName: plantName!,
+            scientificName: scientificName!,
+            imageFile: imageFile,
+          ),
         ],
       ),
     );

@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:plant_game/core/network_info/network_info.dart';
 import 'package:plant_game/core/utils/size_config.dart';
+import 'package:plant_game/features/home/data/repository/plant_local_repository.dart';
 import 'package:plant_game/features/home/data/repository/scan_plants_repository.dart';
+import 'package:plant_game/features/home/data/service/locale_database_service.dart';
 import 'package:plant_game/features/home/data/service/scan_plants_remote_service.dart';
 
 import '../database/api/api_conscumer.dart';
@@ -28,4 +30,9 @@ void setupServiceLocator() {
         scanPlantsRemoteService: sl<ScanPlantsRemoteService>(),
         networkInfo: sl<NetworkInfo>(),
       ));
+
+  sl.registerLazySingleton<SQFLiteDataSource>(() => SQFLiteDataSource());
+
+  sl.registerLazySingleton<PlantRepository>(
+      () => PlantRepository(dataSource: sl<SQFLiteDataSource>()));
 }

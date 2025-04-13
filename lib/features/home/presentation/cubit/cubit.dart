@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:plant_game/features/home/data/repository/plant_local_repository.dart';
 import 'package:plant_game/features/home/data/repository/scan_plants_repository.dart';
 import 'package:plant_game/features/home/presentation/cubit/state.dart';
 
@@ -17,5 +18,24 @@ class ScanPlantCubit extends Cubit<ScanPlatState> {
     }, (plantModel) {
       emit(ScanImageSuccess(plantModel: plantModel));
     });
+  }
+
+  Future<void> addPlant({
+    required String plantName,
+    String? scientificName,
+    File? imageFile,
+  }) async {
+    emit(PlantLoading());
+    final result = await sl<PlantRepository>().addPlant(
+      plantName: plantName,
+      scientificName: scientificName,
+      imageFile: imageFile,
+    );
+    result.fold(
+      (error) => emit(PlantError(error)),
+      (_) {
+        emit(PlantOperationSuccess('Plant saved successfully'));
+      },
+    );
   }
 }
