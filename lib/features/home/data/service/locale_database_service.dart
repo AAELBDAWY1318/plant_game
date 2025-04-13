@@ -33,9 +33,28 @@ class SQFLiteDataSource {
   }
 
   Future<String> _saveImageFile(File image) async {
+    // Verify source file exists
+    if (!await image.exists()) {
+      throw FileSystemException('Source image does not exist: ${image.path}');
+    }
+
+    // Create destination directory
     final appDir = await getApplicationDocumentsDirectory();
+    final plantsDir = Directory(join(appDir.path, 'plants'));
+    if (!await plantsDir.exists()) {
+      await plantsDir.create(recursive: true);
+    }
+
+    // Copy file
     final fileName = basename(image.path);
-    final savedImage = await image.copy('${appDir.path}/plants/$fileName');
+    final destinationPath = join(plantsDir.path, fileName);
+    final savedImage = await image.copy(destinationPath);
+
+    // Verify copy
+    if (!await savedImage.exists()) {
+      throw FileSystemException('Failed to copy image to: $destinationPath');
+    }
+
     return savedImage.path;
   }
 

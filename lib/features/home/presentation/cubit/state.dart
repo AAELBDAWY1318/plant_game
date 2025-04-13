@@ -31,3 +31,9 @@ class PlantError extends ScanPlatState {
 
   PlantError(this.message);
 }
+
+class PlantLoaded extends ScanPlatState {
+  final List<Map<String, dynamic>> plants;
+
+  PlantLoaded(this.plants);
+}

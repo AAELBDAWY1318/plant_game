@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -32,9 +33,40 @@ class ScanPlantCubit extends Cubit<ScanPlatState> {
       imageFile: imageFile,
     );
     result.fold(
-      (error) => emit(PlantError(error)),
+      (error) {
+        log(error);
+        emit(PlantError(error));
+      },
       (_) {
         emit(PlantOperationSuccess('Plant saved successfully'));
+      },
+    );
+  }
+
+
+  Future<void> getPlants() async {
+    emit(PlantLoading());
+    final result = await sl<PlantRepository>().getPlants();
+    result.fold(
+          (error) => emit(PlantError(error)),
+          (plants) => emit(PlantLoaded(plants)),
+    );
+  }
+
+  Future<void> deletePlant({
+    String? where,
+    List<dynamic>? whereArgs,
+  }) async {
+    emit(PlantLoading());
+    final result = await sl<PlantRepository>().deletePlant(
+      where: where,
+      whereArgs: whereArgs,
+    );
+    result.fold(
+          (error) => emit(PlantError(error)),
+          (_) {
+        emit(PlantOperationSuccess('Plant deleted successfully'));
+        getPlants();
       },
     );
   }
